@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  # Server
+  nginx:
+    container_name: tcg-market-nginx
+    image: nginx:stable-alpine
+    networks:
+      - market-core-network
+    ports:
+      - '8080:80'
+    volumes:
+      - .:/app/tcg-market
+      - ./configs/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  # PHP backend
+  backend:
+    container_name: tcg-market-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DEBUG_MODE: 1
+      ERROR_DETAILS: 1
+      LOG_LEVEL: 100
+    ports:
+      - '9000:9000'
+    image: 'dharyk/tcg-market'
+    networks:
+      - market-core-network
+    restart: unless-stopped
+    volumes:
+      - .:/app/tcg-market
+    depends_on:
+      - database
+      - cache
+
+  # TODO: React frontend
+  
+  # MySQL service
+  database:
+    container_name: tcg-market-database
+    environment:
+      MYSQL_DATABASE: 'tcg_market'
+      MYSQL_USER: 'tcg_market'
+      MYSQL_PASSWORD: '1qa2ws3ed4rf'
+      MYSQL_ROOT_HOST: '172.*.*.*'
+      MYSQL_ROOT_PASSWORD: 'password'
+      TZ: 'Europe/Lisbon'
+    image: "mysql:8.3.0"
+    networks:
+      - market-core-network
+    ports:
+      - '3306:3306'
+    restart: unless-stopped
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./configs/database/my.cnf:/etc/mysql/my.cnf
+      - ./configs/database/init:/docker-entrypoint-initdb.d/:ro
+
+  # Redis service
+  cache:
+    command: redis-server --appendonly yes
+    container_name: tcg-market-cache
+    image: redis:7.2.4-alpine
+    networks:
+      - market-core-network
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+
+networks:
+  market-core-network:
+    driver: bridge
