@@ -1,4 +1,15 @@
 {
+    "autoload": {
+        "psr-4": {
+            "TcgMarket\\": "classes/",
+            "Controller\\": "controllers/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TcgMarket\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "optimize-autoloader": true,
         "sort-packages": true
@@ -11,5 +22,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^11.1"
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit --testsuite TcgMarket"
     }
 }
