@@ -5,6 +5,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Routing\RouteCollectorProxy;
 
 /** RouteCollectorProxy $api */
+
 $api->get('/', function (Request $request, Response $response, array $args) {
     $response->getBody()->write("Hello beautiful world!");
     return $response;

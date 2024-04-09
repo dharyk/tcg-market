@@ -3,4 +3,5 @@
 /data/
 /backend/composer.lock
 /backend/vendor/
+.env.*
 *.code-workspace

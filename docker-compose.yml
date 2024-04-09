@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+  
   # Server
   nginx:
     container_name: tcg-market-nginx
@@ -19,13 +20,10 @@ services:
   # PHP backend
   backend:
     container_name: tcg-market-backend
+    env_file: .env.backend
     build:
       context: ./backend
       dockerfile: Dockerfile
-    environment:
-      DEBUG_MODE: 1
-      ERROR_DETAILS: 1
-      LOG_LEVEL: 100
     ports:
       - '9000:9000'
     image: 'dharyk/tcg-market'
@@ -43,13 +41,7 @@ services:
   # MySQL service
   database:
     container_name: tcg-market-database
-    environment:
-      MYSQL_DATABASE: 'tcg_market'
-      MYSQL_USER: 'tcg_market'
-      MYSQL_PASSWORD: '1qa2ws3ed4rf'
-      MYSQL_ROOT_HOST: '172.*.*.*'
-      MYSQL_ROOT_PASSWORD: 'password'
-      TZ: 'Europe/Lisbon'
+    env_file: .env.database
     image: "mysql:8.3.0"
     networks:
       - market-core-network
