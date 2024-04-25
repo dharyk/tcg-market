@@ -1,35 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.0/phpunit.xsd"
-    colors="true"
-    backupGlobals="false"
-    bootstrap="boot/app.php"
-    beStrictAboutTestsThatDoNotTestAnything="false"
-    cacheResult="false"
-    verbose="true">
-
-    <!-- Define test folder. -->
-    <testsuites>
-        <testsuite name="TcgMarket">
-            <directory>./tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <!-- Define PHP env vars -->
-    <php>
-        <env name="appMode" value="testing" />
-        <env name="unitTesting" value="true" />
-    </php>
-
-    <!-- Test coverage -->
-    <logging>
-        <log type="coverage-html" target="coverage" lowUpperBound="35" highLowerBound="70"/>
-    </logging>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./classes</directory>
-        </whitelist>
-    </filter>
-
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.1/phpunit.xsd" colors="true" backupGlobals="false" bootstrap="boot/app.php" beStrictAboutTestsThatDoNotTestAnything="false" cacheResult="false" cacheDirectory=".phpunit.cache">
+  <coverage>
+    <report>
+      <clover outputFile="coverage.xml"/>
+    </report>
+  </coverage>
+  <!-- Define test folder. -->
+  <testsuites>
+    <testsuite name="TcgMarket">
+      <directory>./tests</directory>
+    </testsuite>
+  </testsuites>
+  <!-- Define PHP env vars -->
+  <php>
+    <env name="appMode" value="testing"/>
+    <env name="unitTesting" value="true"/>
+  </php>
+  <!-- Test coverage -->
+  <source>
+    <include>
+      <directory suffix=".php">./classes</directory>
+    </include>
+  </source>
 </phpunit>

@@ -1,7 +1,10 @@
 # Commit your application's lock file https://getcomposer.org/doc/01-basic-usage.md#commit-your-composer-lock-file-to-version-control
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
+/.scannerwork/
 /data/
-/backend/composer.lock
+/backend/.phpunit.cache/
+/backend/.scannerwork/
 /backend/vendor/
+/backend/coverage.xml
 .env.*
 *.code-workspace
