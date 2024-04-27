@@ -5,6 +5,8 @@ use Monolog\Handler\ChromePHPHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
+use TcgMarket\Handler\CacheHandler;
 
 /**
  * Application dependencies
@@ -26,5 +28,17 @@ $container->set(
         $logger->pushHandler($handler);
 
         return $logger;
+    }
+);
+
+$container->set(
+    CacheInterface::class,
+    function (ContainerInterface $container) {
+        $settings = $container->get('settings')['cache'];
+        $client = new Redis();
+        $client->pconnect($settings['host'], $settings['port']);
+        $client->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
+
+        return new CacheHandler($client);
     }
 );

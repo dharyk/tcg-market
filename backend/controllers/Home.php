@@ -4,6 +4,7 @@ namespace Controller;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\SimpleCache\CacheInterface;
 use Throwable;
 
 use function json_encode;
@@ -22,7 +23,9 @@ class Home extends AbstractController
                         [
                             'code' => 0,
                             'message' => 'OK',
-                            'details' => [],
+                            'details' => [
+                                'cache' => sprintf('%.3f ms', $this->testCache()),
+                            ],
                         ],
                         JSON_THROW_ON_ERROR
                     )
@@ -34,5 +37,14 @@ class Home extends AbstractController
         } catch (Throwable $t) {
             throw $this->internalErrorException($request, $t->getMessage(), $t);
         }
+    }
+
+    private function testCache(): float
+    {
+        $cache = $this->get(CacheInterface::class);
+        $start = microtime(true);
+        $cache->ping();
+
+        return round((microtime(true) - $start) * 1000, 3);
     }
 }

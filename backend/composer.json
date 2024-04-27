@@ -21,12 +21,14 @@
         "sort-packages": true
     },
     "require": {
+        "ext-redis": "*",
         "aura/sql": "^5.0",
         "guzzlehttp/psr7": "^2",
         "league/flysystem": "^3.27",
         "monolog/monolog": "^3.5",
         "nesbot/carbon": "^3.2",
         "php-di/slim-bridge": "^3.4",
+        "psr/simple-cache": "^3.0",
         "ramsey/uuid": "^4.7",
         "slim/slim": "4.*",
         "zeuxisoo/slim-whoops": "^0.7.3"

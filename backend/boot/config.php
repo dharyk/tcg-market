@@ -8,7 +8,8 @@ return [
         'determineRouteBeforeAppMiddleware' => true,
         'outputBuffering' => 'append',
         'cache' => [
-            'host' => 'redis',
+            'host' => 'cache', //getenv('REDIS_HOST') ?? 'cache',
+            'port' => 6379, // (int) getenv('REDIS_PORT') ?? 6379,
         ],
         'logger' => [
             'name' => getenv('APP_NAME'),

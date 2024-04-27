@@ -11,7 +11,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
-use Slim\Error\Renderers\JsonErrorRenderer;
 use Slim\Exception\HttpException;
 use Slim\Interfaces\CallableResolverInterface;
 use TcgMarket\Handler\ApiErrorHandler;
