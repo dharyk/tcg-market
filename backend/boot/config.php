@@ -19,7 +19,7 @@ return [
             'name' => getenv('SESSION_NAME'),
             'lifetime' => getenv('SESSION_TTL'),
             'secure' => true,
-            'httpOnly' => true,
+            'httponly' => true,
         ],
         'authentication' => [
             'routes' => '/\/api\/.*/',
