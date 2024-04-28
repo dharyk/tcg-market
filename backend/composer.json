@@ -43,7 +43,7 @@
     },
     "scripts": {
         "test": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --testsuite TcgMarket",
-        "stan": "./vendor/bin/phpstan analyse --ansi --no-progress -c phpstan.neon --error-format=prettyJson > reports/phpstan.json",
+        "stan": "./vendor/bin/phpstan analyse --ansi -c phpstan.neon --error-format=prettyJson > reports/phpstan.json",
         "cs": "./vendor/bin/phpcs -p --standard=PSR12 --colors --parallel=25 --basepath=. --extensions=php --encoding=utf8 --report=full classes/* controllers/*",
         "md": "./vendor/bin/phpmd classes controllers text phpmd.xml"
     }
