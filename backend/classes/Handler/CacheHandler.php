@@ -8,6 +8,9 @@ use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use Redis;
 
+/**
+ * Handler responsible for managing cache operations
+ */
 class CacheHandler implements CacheInterface
 {
     private const DEFAULT_TTL = 60; // seconds

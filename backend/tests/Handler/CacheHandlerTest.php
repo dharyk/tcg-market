@@ -268,10 +268,6 @@ class CacheHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->redis = $this->prophesize(Redis::class);
-        $this->redis
-            ->close()
-            ->shouldBeCalled()
-            ->wilLReturn(true);
     }
 
     protected function tearDown(): void

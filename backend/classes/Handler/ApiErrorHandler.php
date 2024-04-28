@@ -8,6 +8,9 @@ use Slim\Error\Renderers\JsonErrorRenderer;
 use Slim\Interfaces\CallableResolverInterface;
 use Slim\Handlers\ErrorHandler;
 
+/**
+ * Handler responsible for managing API error responses
+ */
 class ApiErrorHandler extends ErrorHandler
 {
     private const CONTENT_TYPE = 'application/json';
