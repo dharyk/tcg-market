@@ -16,11 +16,6 @@ class CacheHandler implements CacheInterface
     {
     }
 
-    public function __destruct()
-    {
-        $this->redis->close();
-    }
-
     public function ping(): bool
     {
         return (bool) $this->redis->ping();

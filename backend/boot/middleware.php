@@ -7,9 +7,7 @@ use Zeuxisoo\Whoops\Slim\WhoopsMiddleware;
 /**
  * Application middleware
  */
-$app->add(new SessionMiddleware(
-    $container->get('settings')['session']
-));
+$app->add($container->get(SessionMiddleware::class));
 $app->add($container->get(RateLimiterMiddleware::class));
 $app->add(new WhoopsMiddleware([
     'enable' => true,
