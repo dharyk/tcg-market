@@ -18,6 +18,9 @@ use function trim;
 use const FILTER_VALIDATE_IP;
 use const FILTER_FLAG_NO_RES_RANGE;
 
+/**
+ * Middleware responsible for enforcing a rate limit on API requests
+ */
 class RateLimiterMiddleware
 {
     private const PREFIX = 'api-rate-limit-';
@@ -38,6 +41,7 @@ class RateLimiterMiddleware
 
     public function __invoke(Request $request, RequestHandler $handler): Response
     {
+        $nowTs = (new DateTimeImmutable())->getTimestamp();
         $cacheKey = sprintf('%s%d', self::PREFIX, $this->resolveRemoteIp($request));
         if ($this->cache->has($cacheKey)) {
             $rateData = $this->cache->get($cacheKey);
@@ -46,12 +50,13 @@ class RateLimiterMiddleware
             $rateData = [
                 'limit' => 30,
                 'remaining' => 30,
-                'since' => (new DateTimeImmutable())->getTimestamp(),
+                'since' => $nowTs,
+                'until' => $nowTs + self::TTL,
             ];
         }
 
         if ($rateData['remaining'] < 0) {
-            $after = DateTimeImmutable::createFromFormat('U', (string) ($rateData['since'] + self::TTL));
+            $after = DateTimeImmutable::createFromFormat('U', (string) $rateData['until']);
             throw new HttpTooManyRequestsException(
                 $request,
                 sprintf(
@@ -61,13 +66,13 @@ class RateLimiterMiddleware
             );
         }
 
-        $this->cache->set($cacheKey, $rateData, self::TTL);
+        $this->cache->set($cacheKey, $rateData, ($rateData['until'] - $nowTs));
         $response = $handler->handle($request);
 
         return $response
             ->withHeader('X-Rate-Limit-Limit', (string) $rateData['limit'])
             ->withHeader('X-Rate-Limit-Remaining', (string) $rateData['remaining'])
-            ->withHeader('X-Rate-Limit-Reset', (string) ($rateData['since'] + self::TTL));
+            ->withHeader('X-Rate-Limit-Reset', (string) $rateData['until']);
     }
 
     private function resolveRemoteIp(Request $request): int

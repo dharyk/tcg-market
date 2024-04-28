@@ -32,7 +32,7 @@ class RateLimiterMiddlewareTest extends TestCase
         $response
             ->withHeader(
                 Argument::exact('X-Rate-Limit-Reset'),
-                Argument::type('int'),
+                Argument::type('string'),
             )
             ->shouldBeCalled()
             ->willReturn(
@@ -41,7 +41,7 @@ class RateLimiterMiddlewareTest extends TestCase
         $response
             ->withHeader(
                 Argument::exact('X-Rate-Limit-Remaining'),
-                Argument::type('int'),
+                Argument::type('string'),
             )
             ->shouldBeCalled()
             ->willReturn(
@@ -50,7 +50,7 @@ class RateLimiterMiddlewareTest extends TestCase
         $response
             ->withHeader(
                 Argument::exact('X-Rate-Limit-Limit'),
-                Argument::type('int'),
+                Argument::type('string'),
             )
             ->shouldBeCalled()
             ->willReturn(
@@ -101,10 +101,12 @@ class RateLimiterMiddlewareTest extends TestCase
     {
         $ip = '111.0.0.222';
         $cacheKey = sprintf('api-rate-limit-%d', ip2long($ip));
+        $nowTs = (new DateTimeImmutable())->getTimestamp();
         $rateData = [
             'limit' => 30,
             'remaining' => 0,
-            'since' => (new DateTimeImmutable())->getTimestamp(),
+            'since' => $nowTs,
+            'until' => $nowTs + 60,
         ];
 
         $this->request
