@@ -24,7 +24,7 @@ class DatabaseHandler implements DatabaseInterface
 
     public function ping(): void
     {
-        $this->execute($this->prepare('SELECT 1'));
+        $this->run('SELECT 1');
     }
 
     public function transaction(): bool
@@ -42,7 +42,7 @@ class DatabaseHandler implements DatabaseInterface
         return $this->pdo->rollBack();
     }
 
-    public function quote($value, int $type = PDO::PARAM_STR): string
+    public function quote($value, int $type = PDO::PARAM_STR): string|false
     {
         return $this->pdo->quote($value, $type);
     }
@@ -57,31 +57,23 @@ class DatabaseHandler implements DatabaseInterface
         if (false === $statement->execute()) {
             $error = $statement->errorInfo();
             // TODO: throw custom exception
-            throw new RuntimeException($error[2], $statement->errorCode());
+            throw new RuntimeException($error[2], (int) $statement->errorCode());
         }
 
-        $affected = $statement->rowCount();
-        $statement->closeCursor();
-        $statement = null;
-
-        return $affected;
+        return $statement->rowCount();
     }
 
-    public function run(string $query, array $values = []): int
+    public function run(string $query, array $values = []): PDOStatement
     {
         $statement = $this->prepare($query, $values);
+        $this->execute($statement);
 
-        return $this->execute($statement);
+        return $statement;
     }
 
     public function queryOne(PDOStatement $statement): ?array
     {
-        if (false === $statement->execute()) {
-            $error = $statement->errorInfo();
-            // TODO: throw custom exception
-            throw new RuntimeException($error[2], $statement->errorCode());
-        }
-
+        $this->execute($statement);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
         $statement->closeCursor();
         $statement = null;
@@ -91,12 +83,7 @@ class DatabaseHandler implements DatabaseInterface
 
     public function queryAssoc(PDOStatement $statement): array
     {
-        if (false === $statement->execute()) {
-            $error = $statement->errorInfo();
-            // TODO: throw custom exception
-            throw new RuntimeException($error[2], $statement->errorCode());
-        }
-
+        $this->execute($statement);
         $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
         $statement->closeCursor();
         $statement = null;
@@ -106,12 +93,7 @@ class DatabaseHandler implements DatabaseInterface
 
     public function queryObject(PDOStatement $statement, $fqcn = 'stdClass'): array
     {
-        if (false === $statement->execute()) {
-            $error = $statement->errorInfo();
-            // TODO: throw custom exception
-            throw new RuntimeException($error[2], $statement->errorCode());
-        }
-
+        $this->execute($statement);
         $objects = [];
 
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {

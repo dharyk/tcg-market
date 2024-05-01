@@ -22,32 +22,32 @@ interface DatabaseInterface
     /**
      * Begin a transaction
      */
-    public function transaction();
+    public function transaction(): bool;
 
     /**
      * Commit a transaction
      */
-    public function commit();
+    public function commit(): bool;
 
     /**
      * Rollback a transaction
      */
-    public function rollback();
+    public function rollback(): bool;
 
     /**
      * Quote a value for use in SQL
      *
      * @param  mixed $value
      * @param  int   $type
-     * @return string
+     * @return string|false
      */
-    public function quote($value, int $type = PDO::PARAM_STR): string;
+    public function quote($value, int $type = PDO::PARAM_STR): string|false;
 
     /**
      * Prepare a SQL statement
      *
-     * @param  string $query
-     * @param  array  $values
+     * @param  string               $query
+     * @param  array<string, mixed> $values
      * @return PDOStatement
      */
     public function prepare(string $query, array $values = []): PDOStatement;
@@ -63,17 +63,17 @@ interface DatabaseInterface
     /**
      * Prepare and execute a SQL query
      *
-     * @param  string $query
-     * @param  array  $values
-     * @return int
+     * @param  string               $query
+     * @param  array<string, mixed> $values
+     * @return PDOStatement
      */
-    public function run(string $query, array $values = []): int;
+    public function run(string $query, array $values = []): PDOStatement;
 
     /**
      * Run a SQL query and return first result as an associative array
      *
      * @param  PDOStatement $statement
-     * @return array|null
+     * @return array<string,mixed>|null
      */
     public function queryOne(PDOStatement $statement): ?array;
 
@@ -81,7 +81,7 @@ interface DatabaseInterface
      * Run a SQL query and return result as an associative array
      *
      * @param  PDOStatement $statement
-     * @return array
+     * @return array<array<string,mixed>>
      */
     public function queryAssoc(PDOStatement $statement): array;
 
@@ -90,7 +90,7 @@ interface DatabaseInterface
      *
      * @param  PDOStatement $statement
      * @param  string       $fqcn
-     * @return array
+     * @return array<mixed>
      */
     public function queryObject(PDOStatement $statement, $fqcn = 'stdClass'): array;
 }
