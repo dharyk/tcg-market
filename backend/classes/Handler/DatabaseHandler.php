@@ -7,6 +7,7 @@ use RuntimeException;
 use PDO;
 use PDOStatement;
 use TcgMarket\Core\DatabaseInterface;
+use TcgMarket\Exception\DatabaseQueryFailureException;
 
 /**
  * Handler responsible for managing database operations
@@ -56,8 +57,8 @@ class DatabaseHandler implements DatabaseInterface
     {
         if (false === $statement->execute()) {
             $error = $statement->errorInfo();
-            // TODO: throw custom exception
-            throw new RuntimeException($error[2], (int) $statement->errorCode());
+
+            throw new DatabaseQueryFailureException($error[2], $error[1]);
         }
 
         return $statement->rowCount();

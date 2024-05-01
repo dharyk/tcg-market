@@ -8,8 +8,8 @@ use PDO;
 use PDOStatement;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use RuntimeException;
 use stdClass;
+use TcgMarket\Exception\DatabaseQueryFailureException;
 use TcgMarket\Handler\DatabaseHandler;
 
 class DatabaseHandlerTest extends TestCase
@@ -167,13 +167,9 @@ class DatabaseHandlerTest extends TestCase
         $statement
             ->errorInfo()
             ->shouldBeCalled()
-            ->willReturn(['', 0, $errorMessage]);
-        $statement
-            ->errorCode()
-            ->shouldBeCalled()
-            ->willReturn($errorCode);
+            ->willReturn(['', $errorCode, $errorMessage]);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(DatabaseQueryFailureException::class);
         $this->expectExceptionCode($errorCode);
         $this->expectExceptionMessage($errorMessage);
 
